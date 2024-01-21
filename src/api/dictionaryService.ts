@@ -9,6 +9,6 @@ export const dictionarySearch = async (word: string) => {
     }
     return data;
   } catch (error) {
-    console.log("Fetching word failed!", error);
+    throw new Error("Something went wrong!");
   }
 };

@@ -1,9 +1,4 @@
-import React from "react";
-import { Board } from "./components/wordleBoard/wordleBoard";
+import { Board } from "./components/wordleBoard";
 export function App() {
-  return (
-    <>
-      <Board />
-    </>
-  );
+  return <Board />;
 }

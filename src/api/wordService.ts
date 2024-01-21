@@ -9,7 +9,6 @@ export const getWord = async () => {
     }
     return data[0] as string;
   } catch (error) {
-    console.log("Fetching word failed!", error);
     throw new Error("Something went wrong!");
   }
 };

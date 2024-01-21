@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { letterLength, letters } from "./wordleBoard";
 import { Letter } from "./wordleLetter";
-// import { dictionarySearch } from "../../api/dictionaryService";
 type RowProps = {
   active: boolean;
   goNext: () => void;
@@ -9,6 +8,7 @@ type RowProps = {
   actualRow: number;
   word: string[];
   setWord: (word: string[]) => void;
+  setHandleInputWord: (word: string) => void;
 };
 
 export function Row({
@@ -18,29 +18,18 @@ export function Row({
   actualRow,
   word,
   setWord,
+  setHandleInputWord,
 }: RowProps) {
   const [colors, setColors] = useState<("green" | "yellow" | "darkGray")[]>([]);
+
   useEffect(() => {
     if (!active) return;
     const keyUpListener = async (event: KeyboardEvent) => {
       const { key } = event;
 
+      setHandleInputWord(word.join(""));
+
       if (key === "Enter" && word.length === letterLength) {
-        // TODO this is related to search the word in a dictionary before check if is the same word as we need
-        // const checkWord = async () => {
-        //   const wordToCheck = word.join("");
-        //   const response = await dictionarySearch(wordToCheck);
-        //   console.log(response);
-        //   return response;
-        // };
-        // const response = await checkWord();
-        // console.log(response);
-
-        if (word.join("") === wordToGuess) {
-          console.log("correct word");
-          return;
-        }
-
         const checkWord = () => {
           const wordToGuessToArr = wordToGuess.split("");
           setColors(
@@ -57,8 +46,14 @@ export function Row({
           return letterMatches;
         };
 
-        goNext();
         checkWord();
+
+        if (word.join("") === wordToGuess) {
+          console.log("correct word");
+          return;
+        }
+
+        goNext();
       }
 
       if (key === "Backspace") {
@@ -76,7 +71,17 @@ export function Row({
     return () => {
       document.removeEventListener("keyup", keyUpListener);
     };
-  }, [word, active, goNext, actualRow, wordToGuess, setWord]);
+  }, [
+    word,
+    active,
+    goNext,
+    actualRow,
+    wordToGuess,
+    setWord,
+    setColors,
+    setHandleInputWord,
+  ]);
+
   return (
     <div className="flex gap-2 mb-2" tabIndex={0}>
       {new Array(letterLength).fill(0).map((_, i) => (
